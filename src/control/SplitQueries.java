@@ -59,7 +59,14 @@ public class SplitQueries {
 		// set constrains
 		// if query does not contain constrains, set where as "null"
 		if (splitsql.length != 1) {
-			stru.setWhere(splitsql[1].trim());
+			tmp = splitsql[1].trim().substring(splitsql[1].trim().length() - 1, splitsql[1].trim().length());
+			// System.out.println("tmp:" + tmp);
+			if (tmp.equals(";")) {
+				stru.setWhere(splitsql[1].trim().substring(0, splitsql[1].trim().length() - 1));
+			} else {
+				stru.setWhere(splitsql[1].trim());
+			}
+
 		} else {
 			stru.setWhere("null");
 		}

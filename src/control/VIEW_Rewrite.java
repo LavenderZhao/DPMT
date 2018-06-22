@@ -46,8 +46,15 @@ public class VIEW_Rewrite implements QueryRewrite {
 
 	public String rewrite(QueriesStru stru, Connection conn) {
 
-		String sql = "SELECT *\nFROM ORIGINAL_QUERY \nWHERE(";
+		String sql = "SELECT *\nFROM ORIGINAL_QUERY \nWHERE ";
 		String subsql = "";
+
+		if (stru.getWhere().equals("null")) {
+			sql += "WHERE \n    (";
+		} else {
+			sql += stru.getWhere() + " AND (";
+		}
+
 		if (stru.getAtt().get(0).equals("*")) {
 			for (String tablename : stru.getTablelist()) {
 				for (String attname : baseDao.getColumnNames(tablename, conn)) {
