@@ -14,8 +14,8 @@ public class VIEW_Rewrite implements QueryRewrite {
 	public void createOquery(Connection conn) {
 
 		String sql1 = "CREATE VIEW ORIGINAL_QUERY AS \n";
-		sql1 += post.getText(queryPath); // the original query
-
+		sql1 += jdbcUtils.getText(queryPath); // the original query
+		System.out.println(sql1);
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
@@ -30,7 +30,7 @@ public class VIEW_Rewrite implements QueryRewrite {
 	public void createDQuery(QueriesStru stru, Connection conn) {
 		Statement stmt = null;
 		String sql2 = "CREATE VIEW DEL_QUERY AS \n";
-		sql2 += post.getText(queryPath);
+		sql2 += jdbcUtils.getText(queryPath);
 		// replace the original "from ..." with _del table
 		for (String tablename : stru.getTablelist()) {
 			sql2 = sql2.replaceAll(tablename, tablename + "_del");

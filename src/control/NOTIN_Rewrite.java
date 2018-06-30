@@ -13,12 +13,13 @@ public class NOTIN_Rewrite implements QueryRewrite {
 
 	public String rewrite(QueriesStru stru, Connection conn) {
 
-		String sql = post.getText(queryPath).trim(); // the original query
+		String sql = jdbcUtils.getText(queryPath).trim(); // the original query
 		String subsql = ""; // store the all attributes
 
 		if (stru.getWhere().equals("null")) {
-			sql += "WHERE \n    (";
+			sql += "WHERE \n    ";
 		} else {
+			// judge if the sql end with ";"
 			String tmp = sql.substring(sql.length() - 1, sql.length());
 			System.out.println("tmp:" + tmp);
 			if (tmp.equals(";")) {

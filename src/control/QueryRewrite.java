@@ -7,7 +7,7 @@ import model.QueriesStru;
 
 public interface QueryRewrite {
 	public String queryPath = "/Users/qq/Documents/GitHub/DPMT/sql/query.sql"; // path of query
-	public PostgreSQLJDBC post = new PostgreSQLJDBC();
+	public JdbcUtils jdbcUtils = new JdbcUtils();
 
 	public BaseDao baseDao = new BaseDao();
 
