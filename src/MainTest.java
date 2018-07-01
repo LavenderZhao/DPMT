@@ -114,11 +114,10 @@ public class MainTest {
 
 		ConstraintStru2 constraintStru = violationCheck(constraint, sequence);
 
-		System.out.println("here");
 		try {
 			// Run Row(SQL(theta)) for each constraint
 
-			for (int i = 0; i <= 0; i++) {
+			for (int i = 0; i <= m; i++) {
 				System.out.println("the " + i + " round!");
 
 				ArrayList<TableStru> tableList = constraintRewrite.getTableList();
@@ -147,8 +146,8 @@ public class MainTest {
 					count++;
 				}
 				System.out.println("count: " + count);
-				// jdbcUtils.DropDView(c, tableNames);
-				// jdbcUtils.DropDTable(c, tableNames);
+				jdbcUtils.DropDView(c, tableNames);
+				jdbcUtils.DropDTable(c, tableNames);
 			}
 
 		} catch (Exception e) {
