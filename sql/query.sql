@@ -1,3 +1,3 @@
 SELECT  *
-FROM  book
-WHERE bid = '8800' and title = 'title_75';
+FROM  borrow
+WHERE bid = '19' and rid = '878';

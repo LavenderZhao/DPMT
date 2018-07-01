@@ -1,46 +1,68 @@
 package model;
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 
-public class RandomMarkov implements MarkovTree{
-    private HashMap<String, ArrayList<HashMap>> vioTupleMap;
-    private int index = 0;
-    private  Random random;
-    private ArrayList<String> keysLst;
-    private String[] tableNameLst;
+public class RandomMarkov implements MarkovTree {
+	private ArrayList<HashMap> vioTupleLst;
+	private Random random;
+	private ArrayList<TableStru> tableList;
+	private HashMap<String, ArrayList> tableMap;
 
-    public RandomMarkov(ConstraintStru2 constraintStru, Random random) {
-        this.vioTupleMap = constraintStru.getVioTupleMap();
-        this.random = random;
-        this.keysLst = new ArrayList(Arrays.asList(vioTupleMap.keySet().toArray(new String[0]))); // the group of violation tuples
-        this.tableNameLst = vioTupleMap.keySet().toArray(new String[0]);
-    }
+	public RandomMarkov(ConstraintStru2 constraintStru, Random random, ArrayList<TableStru> tableList,
+			HashMap<String, ArrayList> tableMap) {
+		this.vioTupleLst = constraintStru.getVioTupleMap();
+		this.random = random;
+		this.tableList = tableList;
+		this.tableMap = tableMap;
+	}
 
-    @Override
-    public boolean hasNext() {
-        return index < keysLst.size(); //
-    }
+	@Override
+	public boolean hasNext() {
+		return vioTupleLst.size() > 0;
+	}
 
-    @Override
-    public HashMap next() {
-        int size = keysLst.size();
-        int pos = Math.abs(random.nextInt()) % size;
-        ArrayList<HashMap> tupleLst = vioTupleMap.get(keysLst.get(pos));
-        int tupleLstSize = tupleLst.size();
-        int pos2 = Math.abs(random.nextInt()) % tupleLstSize;
-        HashMap tuple = tupleLst.get(pos2);
-        
-        // be careful it seems transfer reference
-        vioTupleMap.remove(keysLst.get(pos)); // remove the group of violation tuples in each violation map
+	@Override
+	public HashMap next() {
+		// choose one combined violation tuple, ex reader_rid,reader_firstname
+		// ...reader'fistname
+		int size = vioTupleLst.size();
+		int pos = Math.abs(random.nextInt()) % size;
+		HashMap vioTuple = vioTupleLst.get(pos);
+		// choose a tuple of one table from combined violation tuple, ex.
+		// reader_rid,reader_firstname ...reader_phone
+		int pos2 = Math.abs(random.nextInt()) % tableList.size();
+		TableStru tbStru = tableList.get(pos2);
+		String tbName = tbStru.getTableName();
+		HashMap tuple = new HashMap();
+		tuple.put("tableName", tbName.replaceAll("'", ""));
+		for (Object attName : tableMap.get(tbName.replaceAll("'", ""))) {
+			tuple.put(attName, vioTuple.get(tbName + "_" + attName));
+		}
+		// delete all the combined violation tuple contained this tuple
+		vioTupleLst.remove(pos);
+		Iterator<HashMap> iterator = vioTupleLst.iterator();
+		while (iterator.hasNext()) {
+			HashMap remainTuple = iterator.next();
+			Boolean bool = true;
+			for (Object attName : tableMap.get(tbName.replaceAll("'", ""))) {
 
-        keysLst.remove(pos);
-        index ++;
+				if ((remainTuple.get(tbName + "_" + attName) == null && tuple.get(attName) == null)) {
+					continue;
+				}
+				if (remainTuple.get(tbName + "_" + attName) == null || tuple.get(attName) == null
+						|| !remainTuple.get(tbName + "_" + attName).equals(tuple.get(attName))) {
+					bool = false;
+					break;
+				}
+			}
+			if (bool)
+				iterator.remove();
+		}
 
-        return tuple;
-    }
-
+		return tuple;
+	}
 
 }

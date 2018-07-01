@@ -1,4 +1,5 @@
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import control.JdbcUtils;
 import control.VIEW_Rewrite;
@@ -15,15 +16,15 @@ public class main {
 		VIEW_Rewrite rewrite = new VIEW_Rewrite();
 		JdbcUtils jUtils = new JdbcUtils();
 		QueriesStru stru = new QueriesStru();
-		BaseDao dao = new BaseDao();
-		Connection conn = dao.connectDB();
+		BaseDao basedao = new BaseDao();
+		Connection c = basedao.connectDB();
 		/*
 		 * stru = jUtils.splitQuery(); rewrite.createOquery(conn); String sql =
 		 * rewrite.rewrite(stru, conn);
 		 */
-		String data = "'99889874', 'firstname_488_48', 'lastname_58', '2017-02-16', 't', 'phone_545_54'";
-		dao.insertdata(conn, "reader", data);
-
+		ArrayList<String> tableNames = basedao.getTableNames(c);
+		jUtils.DropDView(c, tableNames);
+		jUtils.DropDTable(c, tableNames);
 	}
 
 }

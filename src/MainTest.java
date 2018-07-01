@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.Random;
 
 import control.ConstraintRewrite2;
+import control.JdbcUtils;
 import control.PostgreSQLJDBC6;
+import dao.BaseDao;
 import model.ConstraintStru2;
+import model.QueriesStru;
 import model.RandomMarkov;
 import model.TableStru;
 
@@ -17,14 +20,15 @@ public class MainTest {
 	public static String port = "5432";
 	public static String usrName = "postgres";
 	public static String psw = "";
-	public String sqlPath = "/Users/qq/Documents/GitHub/DPMT/sql/example.sql";
-	private static String constraints = "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false |a=g]";
+	public static String sqlPath = "/Users/qq/Documents/GitHub/DPMT/sql/example.sql";
+	private static String constraints = "borrow(a,b,c), borrow'(e,d,c) -: a=e,b=d";
 	private float epsilon = 0.1f;
 	private float theta = 0.01f;
 	private static Connection c;
 	private static PostgreSQLJDBC6 postgreSQLJDBC;
 	private static HashMap<String, ArrayList> tableMap;
 	private ConstraintRewrite2 constraintRewrite;
+	private static JdbcUtils jdbcUtils = new JdbcUtils();
 
 	public static void main(String[] args) throws SQLException {
 		// TODO Auto-generated method stub
@@ -33,6 +37,7 @@ public class MainTest {
 		MainTest test = new MainTest();
 		c = postgreSQLJDBC.connectDB(address, port, dbName, usrName, psw); // init the connection of the database
 		tableMap = postgreSQLJDBC.getTableSchema(c); // the schema of the database
+
 		test.sampleFramework(constraints.trim(), 0);
 	}
 
@@ -79,7 +84,7 @@ public class MainTest {
 		// { ........ }
 		String[] depSqlArray = constraintRewrite.rewrite(tableMap);
 		// String[ sql , attName1,attName2...]
-		HashMap<String, ArrayList<HashMap>> vioTupleMap = constraintRewrite.getVioTuples(depSqlArray, c, tableMap);
+		ArrayList<HashMap> vioTupleMap = constraintRewrite.getVioTuples(depSqlArray, c, tableMap);
 
 		// create deletion table with same structure and store them in the deletion
 		// table
@@ -100,47 +105,57 @@ public class MainTest {
 	}
 
 	public void sampleFramework(String constraint, int sequence) throws SQLException {
+		BaseDao basedao = new BaseDao();
+		Connection conn = basedao.connectDB();
 		int count = 0;
 		Random random = new Random();
 		int m = (int) ((1 / (2 * epsilon)) * Math.log(2 / theta));
+		ArrayList<String> tableNames = basedao.getTableNames(c);
 
 		ConstraintStru2 constraintStru = violationCheck(constraint, sequence);
 
-		System.out.println("m: " + m);
-
+		System.out.println("here");
 		try {
 			// Run Row(SQL(theta)) for each constraint
-			if (constraintStru.getDepSqlLst().length > 1) {
-				// has equal attribute for different table
-				for (int i = 0; i <= m; i++) {
-					RandomMarkov randomMarkov = new RandomMarkov(constraintStru, random);
-					// markov chain provide the tuples which to delete next
-					ArrayList<TableStru> tableList = constraintRewrite.getTableList();
 
-					while (randomMarkov.hasNext()) {
+			for (int i = 0; i <= 0; i++) {
+				System.out.println("the " + i + " round!");
 
-						HashMap vioTuple = randomMarkov.next();
-						// reader_rid,reader_firstname ...reader'_rid
-						int pos = Math.abs(random.nextInt()) % tableList.size();
-						System.out.println(pos);
-						TableStru tbStru = tableList.get(pos);
-						String tbName = tbStru.getTableName();
-						HashMap tuple = new HashMap();
-						for (Object attName : tableMap.get(tbName.replaceAll("'", ""))) {
-							tuple.put(attName, vioTuple.get(tbName + "_" + attName));
-							// reader_rid,reader_firstname ...reader_phone
-						}
+				ArrayList<TableStru> tableList = constraintRewrite.getTableList();
 
-						System.out.println(vioTuple);
-						System.out.println(tuple);
-					}
+				RandomMarkov randomMarkov = new RandomMarkov(constraintStru, random, tableList, tableMap);
+
+				// create delete table for each table
+				jdbcUtils.createDeleteTbale(c, tableNames);
+
+				// markov chain provide the tuples which to delete next
+				while (randomMarkov.hasNext()) {
+
+					HashMap tuple = randomMarkov.next();
+					String tableName = (String) tuple.get("tableName");
+					// reader_rid,reader_firstname ...reader'_rid
+					jdbcUtils.updateTable(tuple, "del_" + tableName, c);
+					// System.out.println(tuple);
 				}
+
+				jdbcUtils.CreateDeleteView(c, tableNames);
+				QueriesStru stru = new QueriesStru();
+				stru = jdbcUtils.splitQuery();
+				boolean flag = jdbcUtils.queryRewrite(stru, c);
+
+				if (flag) {
+					count++;
+				}
+				System.out.println("count: " + count);
+				// jdbcUtils.DropDView(c, tableNames);
+				// jdbcUtils.DropDTable(c, tableNames);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		System.out.println(count + "/" + m);
+
 	}
 
 }

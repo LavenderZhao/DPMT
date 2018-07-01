@@ -220,7 +220,7 @@ public class BaseDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println("Insert successfully！" + "\n");
+			// System.out.println("Insert successfully！" + "\n");
 		}
 	}
 
@@ -265,6 +265,7 @@ public class BaseDao {
 	}
 
 	public void executeSQL(String sql, Connection conn) {
+
 		PreparedStatement psql;
 		try {
 			psql = conn.prepareStatement(sql);
@@ -279,6 +280,7 @@ public class BaseDao {
 
 	public boolean validateTableNameExist(String tableName, Connection conn) {
 		try {
+
 			ResultSet rs = conn.getMetaData().getTables(null, null, tableName, null);
 			if (rs.next()) {
 				return true;
@@ -289,6 +291,8 @@ public class BaseDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return false;
 	}
+
 }

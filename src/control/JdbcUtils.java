@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -117,17 +120,44 @@ public class JdbcUtils {
 	/**
 	 * Create a new View of table which not include the deleted tuples
 	 */
-	public void CreateDeleteView(Connection conn) {
-		ArrayList<String> tableNames = baseDao.getTableNames(conn);
+	public void CreateDeleteView(Connection conn, ArrayList<String> tableNames) {
+
 		for (String tableName : tableNames) {
-			String sql = "CREATE VIEW NEW_" + tableName + "AS \nSELECT * \nFROM " + tableName + "\nWHERE (";
+			String sql = "CREATE VIEW NEW_" + tableName + " AS \nSELECT * \nFROM " + tableName + "\nWHERE (";
 			ArrayList<String> columnNames = baseDao.getColumnNames(tableName, conn);
 			for (String columName : columnNames) {
 				sql += columName + ", ";
 			}
 			sql = sql.substring(0, sql.length() - 2);
 			sql += ") NOT IN (SELECT * FROM del_" + tableName + ");";
+			// System.out.println(sql);
+			baseDao.executeSQL(sql, conn);
 		}
+
+	}
+
+	public void DropDView(Connection conn, ArrayList<String> tableNames) {
+		String sql = null;
+		for (String tableName : tableNames) {
+			// System.out.println(tableName);
+			sql = "DROP VIEW NEW_" + tableName + ";";
+			baseDao.executeSQL(sql, conn);
+			// System.out.println(sql);
+		}
+
+	}
+
+	public void DropDTable(Connection conn, ArrayList<String> tableNames) {
+
+		for (String tableName : tableNames) {
+			if (baseDao.validateTableNameExist("del_" + tableName, conn)) {
+				String sql = "DROP TABLE del_" + tableName + ";";
+				// System.out.println(sql);
+				baseDao.executeSQL(sql, conn);
+			}
+
+		}
+
 	}
 
 	/**
@@ -135,19 +165,31 @@ public class JdbcUtils {
 	 * 
 	 * @param conn
 	 */
-	public void createDeleteTbale(Connection conn) {
-		ArrayList<String> tableNames = baseDao.getTableNames(conn);
+	public void createDeleteTbale(Connection conn, ArrayList<String> tableNames) {
+
 		for (String tableName : tableNames) {
-			String sql = "CREATE TABLE del_" + tableName + "(";
-			ArrayList<String> columnNames = baseDao.getColumnNames(tableName, conn);
-			ArrayList<String> columnTypes = baseDao.getColumnTypes(tableName, conn);
-			int i = 0;
-			for (String columnName : columnNames) {
-				String columnType = columnTypes.get(i++);
-				sql += columnName + " " + columnType + ",";
+			// System.out.println(tableName);
+			String judge = tableName.substring(0, 3);
+			if (!judge.equals("del")) {
+				/*
+				 * if (baseDao.validateTableNameExist("del_" + tableName, conn)) { String sql =
+				 * "DROP TABLE del_" + tableName + ";"; baseDao.executeSQL(sql, conn); }
+				 */
+				String sql = "CREATE TABLE del_" + tableName + "(";
+				ArrayList<String> columnNames = baseDao.getColumnNames(tableName, conn);
+				ArrayList<String> columnTypes = baseDao.getColumnTypes(tableName, conn);
+				int i = 0;
+				for (String columnName : columnNames) {
+					String columnType = columnTypes.get(i++);
+					sql += columnName + " " + columnType + ",";
+				}
+				sql = sql.substring(0, sql.length() - 1);
+				sql += ");";
+				// System.out.println(sql);
+				baseDao.executeSQL(sql, conn);
+
 			}
-			sql = sql.substring(0, sql.length() - 1);
-			baseDao.executeSQL(sql, conn);
+
 		}
 
 	}
@@ -167,6 +209,38 @@ public class JdbcUtils {
 			data += " '" + tuple.get(columnName) + "', ";
 		}
 		data = data.substring(0, data.length() - 2);
+		// System.out.println("data:" + data);
 		baseDao.insertdata(conn, tableName, data);
 	}
+
+	public boolean queryRewrite(QueriesStru stru, Connection conn) {
+
+		Statement stmt = null;
+		Boolean bool = false;
+		ResultSet rs = null;
+
+		String sql = stru.getSelect() + "\nFROM";
+		ArrayList<String> tablelist = stru.getTablelist();
+		for (String tableName : tablelist) {
+			sql += " NEW_" + tableName + ",";
+		}
+		sql = sql.substring(0, sql.length() - 1);
+		sql += "\nWHERE " + stru.getWhere();
+		System.out.println(sql);
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				bool = true;
+				System.out.println(rs.getString(1) + "\t" + rs.getString(2));
+				// System.out.println(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return bool;
+	}
+
 }
