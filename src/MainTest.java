@@ -4,41 +4,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-import control.ConstraintRewrite2;
-import control.JdbcUtils;
-import control.PostgreSQLJDBC6;
 import dao.BaseDao;
-import model.ConstraintStru2;
+import model.ConstraintStru;
 import model.QueriesStru;
 import model.RandomMarkov;
 import model.TableStru;
+import utils.ConstraintRewrite2;
+import utils.JdbcUtils;
 
+/**
+ * 
+ * @author Jie
+ *
+ */
 public class MainTest {
 
-	private static String address = "localhost";
-	public static String dbName = "cqa";
-	public static String port = "5432";
-	public static String usrName = "postgres";
-	public static String psw = "";
-	public static String sqlPath = "/Users/qq/Documents/GitHub/DPMT/sql/example.sql";
-	private static String constraints = "borrow(a,b,c), borrow'(e,d,c) -: a=e,b=d";
+	private static String constraints = "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false |a=g,b=h,d=i,e=j,k=f]";
 	private float epsilon = 0.1f;
 	private float theta = 0.01f;
 	private static Connection c;
-	private static PostgreSQLJDBC6 postgreSQLJDBC;
-	private static HashMap<String, ArrayList> tableMap;
+
+	private static HashMap<String, ArrayList<String>> tableMap;
 	private ConstraintRewrite2 constraintRewrite;
 	private static JdbcUtils jdbcUtils = new JdbcUtils();
+	private static BaseDao baseDao = new BaseDao();
 
 	public static void main(String[] args) throws SQLException {
 		// TODO Auto-generated method stub
 
-		postgreSQLJDBC = new PostgreSQLJDBC6();
 		MainTest test = new MainTest();
-		c = postgreSQLJDBC.connectDB(address, port, dbName, usrName, psw); // init the connection of the database
-		tableMap = postgreSQLJDBC.getTableSchema(c); // the schema of the database
-
-		test.sampleFramework(constraints.trim(), 0);
+		c = baseDao.connectDB(); // init the connection of the database
+		tableMap = baseDao.getTableSchema(c); // the schema of the database
+		String sql = "SELECT  *\n" + "FROM  reader\n" + "WHERE rid = '4' and lastname = 'lastname_910_';";
+		test.sampleFramework(constraints.trim(), sql, 0);
 	}
 
 	/********
@@ -50,7 +48,7 @@ public class MainTest {
 	 *             find the violation tuples and regarding table, and save them in
 	 *             the del_ table
 	 */
-	public ConstraintStru2 violationCheck(String constraint, int sequence) throws SQLException {
+	public ConstraintStru violationCheck(String constraint, int sequence) throws SQLException {
 
 		constraintRewrite = new ConstraintRewrite2();
 
@@ -98,26 +96,26 @@ public class MainTest {
 		 * postgreSQLJDBC.execute(c,createDelSql,false);
 		 */
 
-		ConstraintStru2 constraintStru = new ConstraintStru2(vioTupleMap, depSqlArray);
+		ConstraintStru constraintStru = new ConstraintStru(vioTupleMap, depSqlArray);
 		// System.out.println(sql);
 
 		return constraintStru;
 	}
 
-	public void sampleFramework(String constraint, int sequence) throws SQLException {
+	public void sampleFramework(String constraint, String sql, int sequence) throws SQLException {
 		BaseDao basedao = new BaseDao();
-		Connection conn = basedao.connectDB();
 		int count = 0;
-		Random random = new Random();
+
+		Random random = new Random(System.currentTimeMillis());
 		int m = (int) ((1 / (2 * epsilon)) * Math.log(2 / theta));
 		ArrayList<String> tableNames = basedao.getTableNames(c);
 
-		ConstraintStru2 constraintStru = violationCheck(constraint, sequence);
+		ConstraintStru constraintStru = violationCheck(constraint, sequence);
 
 		try {
 			// Run Row(SQL(theta)) for each constraint
 
-			for (int i = 0; i <= m; i++) {
+			for (int i = 0; i < 1; i++) {
 				System.out.println("the " + i + " round!");
 
 				ArrayList<TableStru> tableList = constraintRewrite.getTableList();
@@ -134,18 +132,19 @@ public class MainTest {
 					String tableName = (String) tuple.get("tableName");
 					// reader_rid,reader_firstname ...reader'_rid
 					jdbcUtils.updateTable(tuple, "del_" + tableName, c);
-					// System.out.println(tuple);
+					System.out.println(tuple);
+
 				}
 
-				jdbcUtils.CreateDeleteView(c, tableNames);
-				QueriesStru stru = new QueriesStru();
-				stru = jdbcUtils.splitQuery();
+				jdbcUtils.CreateDeleteView_NOTEXIST(c, tableNames);
+				QueriesStru stru = jdbcUtils.splitQuery(sql);
 				boolean flag = jdbcUtils.queryRewrite(stru, c);
 
 				if (flag) {
 					count++;
 				}
 				System.out.println("count: " + count);
+
 				jdbcUtils.DropDView(c, tableNames);
 				jdbcUtils.DropDTable(c, tableNames);
 			}

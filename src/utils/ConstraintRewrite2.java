@@ -1,4 +1,4 @@
-package control;
+package utils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,6 +13,12 @@ import java.util.regex.Pattern;
 import model.ConditionStru;
 import model.TableStru;
 
+/**
+ * Rewrite the constraint
+ * 
+ * @author Jie
+ *
+ */
 public class ConstraintRewrite2 {
 
 	private ArrayList<TableStru> tableList = new ArrayList<>();
@@ -197,7 +203,7 @@ public class ConstraintRewrite2 {
 	 * @return ArrayList<String[queryTbName, sql , attName1,attName2...]>
 	 * @throws SQLException
 	 */
-	public String[] rewrite(HashMap<String, ArrayList> tableMap) throws SQLException {
+	public String[] rewrite(HashMap<String, ArrayList<String>> tableMap) throws SQLException {
 
 		String sql = "SELECT DISTINCT * FROM ";
 		String queryTbNickName = "";
@@ -347,8 +353,8 @@ public class ConstraintRewrite2 {
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList<HashMap> getVioTuples(String[] depSqlArray, Connection c, HashMap<String, ArrayList> tableMap)
-			throws SQLException {
+	public ArrayList<HashMap> getVioTuples(String[] depSqlArray, Connection c,
+			HashMap<String, ArrayList<String>> tableMap) throws SQLException {
 		ArrayList<HashMap> vioTuples = new ArrayList<>(); // <tableName,<attributeName,value>>
 		Statement stmt = c.createStatement();
 		ResultSet rs = stmt.executeQuery(depSqlArray[0]);

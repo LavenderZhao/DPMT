@@ -7,15 +7,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BaseDao {
 
 	public String dbName = "cqa";
 	public String port = "5432";
 	public String usrName = "postgres";
-	public String psw = "";
-	public String sqlPath = "/Users/qq/Documents/GitHub/DPMT/sql/example.sql";
+	public String psw = "123";
+	public String sqlPath = "/Users/johnny/workplace/MSCProj/originQuery.sql";
 
 	private static final String SQL = "SELECT * FROM ";
 
@@ -29,6 +31,20 @@ public class BaseDao {
 		try {
 			Class.forName("org.postgresql.Driver");
 			c = DriverManager.getConnection("jdbc:postgresql://localhost:" + port + "/" + dbName, usrName, psw);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			System.exit(0);
+		}
+		System.out.println("Opened database successfully");
+		return c;
+	}
+
+	public Connection connectDB(String address, String port, String dbName, String usrName, String psw) {
+		Connection c = null;
+		try {
+			Class.forName("org.postgresql.Driver");
+			c = DriverManager.getConnection("jdbc:postgresql://" + address + ":" + port + "/" + dbName, usrName, psw);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -53,6 +69,59 @@ public class BaseDao {
 				System.exit(0);
 			}
 		}
+	}
+
+	/**
+	 * get names of databases
+	 */
+	public ArrayList<String> getDbName(Connection c) {
+		ArrayList<String> dbLst = new ArrayList<>();
+		ResultSet rs = null;
+		Statement stmt;
+		String sql = "SELECT datname FROM pg_database WHERE datistemplate = false";
+		try {
+			stmt = c.createStatement();
+			rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				System.out.println(rs.getString(1));
+				dbLst.add(rs.getString(1));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return dbLst;
+	}
+
+	public HashMap<String, ArrayList<String>> getTableSchema(Connection c) {
+		HashMap<String, ArrayList<String>> tableMap = new HashMap<String, ArrayList<String>>();
+		ResultSet tableSet;
+
+		try {
+			DatabaseMetaData dbmd = c.getMetaData();
+
+			ResultSet primaryKeySet;
+			ResultSet resultSet = dbmd.getTables(null, "%", "%", new String[] { "TABLE" });
+			while (resultSet.next()) {
+				String tableName = resultSet.getString("TABLE_NAME");
+
+				ArrayList<String> attLst = new ArrayList<>();
+				tableSet = dbmd.getColumns(null, null, tableName, "%");
+
+				while (tableSet.next()) {
+					attLst.add(tableSet.getString(4));
+				}
+				tableMap.put(tableName, attLst);
+			}
+
+			System.out.println("schema:\t" + tableMap);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return tableMap;
 	}
 
 	/**

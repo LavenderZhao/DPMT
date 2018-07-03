@@ -2,6 +2,11 @@ package model;
 
 import java.util.ArrayList;
 
+/**
+ * 
+ * @author Xueqi
+ *
+ */
 public class QueriesStru {
 	private String select;
 	private String from;

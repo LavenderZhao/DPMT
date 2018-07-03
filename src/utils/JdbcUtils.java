@@ -1,4 +1,4 @@
-package control;
+package utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +14,11 @@ import java.util.HashMap;
 import dao.BaseDao;
 import model.QueriesStru;
 
+/**
+ * 
+ * @author Xueqi
+ *
+ */
 public class JdbcUtils {
 
 	public QueriesStru stru = new QueriesStru();
@@ -21,7 +26,12 @@ public class JdbcUtils {
 
 	public String queryPath = "/Users/qq/Documents/GitHub/DPMT/sql/query.sql"; // path of query
 
-	// Get the context of file
+	/**
+	 * Get context of file
+	 * 
+	 * @param path
+	 * @return
+	 */
 	public String getText(String path) {
 		File file = new File(path);
 		if (!file.exists() || file.isDirectory()) {
@@ -55,16 +65,20 @@ public class JdbcUtils {
 		return sb.toString();
 	}
 
-	public QueriesStru splitQuery() {
+	/**
+	 * 
+	 * @param sqlText
+	 * @return QueriesStru stru
+	 */
+	public QueriesStru splitQuery(String sqlText) {
 
-		String sqlText; // store context of query
 		String tmp;
 		String[] tmp2;
 		String[] splitsql;
 		String[] split2;
 		ArrayList<String> attlist = new ArrayList<>(); // store attribute required in the query
 		ArrayList<String> tablelist = new ArrayList<>();
-		sqlText = getText(queryPath).toLowerCase(); // get context of the query and turn all the text
+		sqlText = sqlText.toLowerCase(); // get context of the query and turn all the text
 
 		//// split the query and get all the attribute we want to select
 		splitsql = sqlText.split("from");
@@ -119,9 +133,17 @@ public class JdbcUtils {
 
 	/**
 	 * Create a new View of table which not include the deleted tuples
+	 * 
+	 * @param conn
+	 * @param tableNames:list
+	 *            the original table names
 	 */
-	public void CreateDeleteView(Connection conn, ArrayList<String> tableNames) {
+	public void CreateDeleteView_NOTIN(Connection conn, ArrayList<String> tableNames) {
 
+		// CREATE VIEW NEW_tableName AS
+		// SELECT *
+		// FROM tableName
+		// WHERE (attributes,...) NOT IN (SELECT * FROM del_tableName)
 		for (String tableName : tableNames) {
 			String sql = "CREATE VIEW NEW_" + tableName + " AS \nSELECT * \nFROM " + tableName + "\nWHERE (";
 			ArrayList<String> columnNames = baseDao.getColumnNames(tableName, conn);
@@ -130,27 +152,62 @@ public class JdbcUtils {
 			}
 			sql = sql.substring(0, sql.length() - 2);
 			sql += ") NOT IN (SELECT * FROM del_" + tableName + ");";
-			// System.out.println(sql);
 			baseDao.executeSQL(sql, conn);
 		}
 
 	}
 
+	/**
+	 * Create a new View of table which not include the deleted tuples
+	 * 
+	 * @param conn
+	 * @param tableNames:list
+	 *            the original table names
+	 */
+	public void CreateDeleteView_NOTEXIST(Connection conn, ArrayList<String> tableNames) {
+		// CREATE VIEW NEW_tableName AS
+		// SELECT *
+		// FROM tableName
+		// WHERE NOT EXISTS (SELECT 1 FROM del_tableName)
+		for (String tableName : tableNames) {
+			String sql = "CREATE VIEW NEW_" + tableName + " AS \nSELECT * \nFROM " + tableName + "\nWHERE ";
+
+			sql += " NOT EXISTS (SELECT 1 FROM del_" + tableName + ");";
+			System.out.println(sql);
+
+			baseDao.executeSQL(sql, conn);
+		}
+
+	}
+
+	/**
+	 * Drop new views created when running the program
+	 * 
+	 * @param conn
+	 * @param tableNames
+	 */
 	public void DropDView(Connection conn, ArrayList<String> tableNames) {
 		String sql = null;
 		for (String tableName : tableNames) {
-			// System.out.println(tableName);
+			// DROP VIEW NEW_tableName
 			sql = "DROP VIEW NEW_" + tableName + ";";
 			baseDao.executeSQL(sql, conn);
-			// System.out.println(sql);
+
 		}
 
 	}
 
+	/**
+	 * Drop new tables created when running the program
+	 * 
+	 * @param conn
+	 * @param tableNames
+	 */
 	public void DropDTable(Connection conn, ArrayList<String> tableNames) {
 
 		for (String tableName : tableNames) {
 			if (baseDao.validateTableNameExist("del_" + tableName, conn)) {
+				// DROP TABLE del_tableName
 				String sql = "DROP TABLE del_" + tableName + ";";
 				// System.out.println(sql);
 				baseDao.executeSQL(sql, conn);

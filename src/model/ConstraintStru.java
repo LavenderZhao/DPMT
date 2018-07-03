@@ -1,20 +1,31 @@
 package model;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class ConstraintStru{
-    private PKeyDepStru pKeyDepStru;
-    private String depSql;
+public class ConstraintStru {
+	private ArrayList<HashMap> vioTupleMap;
+	private String[] depSqlArray;
+	private int sequence;
 
-    public ConstraintStru(PKeyDepStru pKeyDepStru, String depSql){
-        this.pKeyDepStru = pKeyDepStru;
-        this.depSql = depSql;
-    }
+	public ConstraintStru(ArrayList<HashMap> vioTupleMap, String[] depSql) {
+		this.vioTupleMap = vioTupleMap;
+		this.depSqlArray = depSql;
+	}
 
-    public String getDepSql() {
-        return depSql;
-    }
+	public ArrayList<HashMap> getVioTupleMap() {
+		return vioTupleMap;
+	}
 
-    public PKeyDepStru getpKeyDepStru() {
-        return pKeyDepStru;
-    }
+	public String[] getDepSqlLst() {
+		return depSqlArray;
+	}
+
+	public int getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(int sequence) {
+		this.sequence = sequence;
+	}
 }

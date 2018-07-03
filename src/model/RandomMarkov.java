@@ -9,14 +9,14 @@ public class RandomMarkov implements MarkovTree {
 	private ArrayList<HashMap> vioTupleLst;
 	private Random random;
 	private ArrayList<TableStru> tableList;
-	private HashMap<String, ArrayList> tableMap;
+	private HashMap<String, ArrayList<String>> tableMap;
 
-	public RandomMarkov(ConstraintStru2 constraintStru, Random random, ArrayList<TableStru> tableList,
-			HashMap<String, ArrayList> tableMap) {
-		this.vioTupleLst = constraintStru.getVioTupleMap();
+	public RandomMarkov(ConstraintStru constraintStru, Random random, ArrayList<TableStru> tableList,
+			HashMap<String, ArrayList<String>> tableMap2) {
+		this.vioTupleLst = (ArrayList<HashMap>) constraintStru.getVioTupleMap().clone();
 		this.random = random;
 		this.tableList = tableList;
-		this.tableMap = tableMap;
+		this.tableMap = tableMap2;
 	}
 
 	@Override
@@ -36,6 +36,13 @@ public class RandomMarkov implements MarkovTree {
 		int pos2 = Math.abs(random.nextInt()) % tableList.size();
 		TableStru tbStru = tableList.get(pos2);
 		String tbName = tbStru.getTableName();
+		ArrayList<String> repeatTbLst = new ArrayList();
+		for (TableStru tableStru : tableList) {
+			if (tableStru.getTableName().replaceAll("'", "").equals(tbName.replaceAll("'", ""))) {
+				repeatTbLst.add(tableStru.getTableName()); // add the repeat table
+			}
+		}
+
 		HashMap tuple = new HashMap();
 		tuple.put("tableName", tbName.replaceAll("'", ""));
 		for (Object attName : tableMap.get(tbName.replaceAll("'", ""))) {
@@ -43,23 +50,24 @@ public class RandomMarkov implements MarkovTree {
 		}
 		// delete all the combined violation tuple contained this tuple
 		vioTupleLst.remove(pos);
-		Iterator<HashMap> iterator = vioTupleLst.iterator();
-		while (iterator.hasNext()) {
-			HashMap remainTuple = iterator.next();
-			Boolean bool = true;
-			for (Object attName : tableMap.get(tbName.replaceAll("'", ""))) {
-
-				if ((remainTuple.get(tbName + "_" + attName) == null && tuple.get(attName) == null)) {
-					continue;
+		for (String repeatTbName : repeatTbLst) {
+			Iterator<HashMap> iterator = vioTupleLst.iterator();
+			while (iterator.hasNext()) {
+				HashMap remainTuple = iterator.next();
+				Boolean bool = true;
+				for (Object attName : tableMap.get(tbName.replaceAll("'", ""))) {
+					if ((remainTuple.get(repeatTbName + "_" + attName) == null && tuple.get(attName) == null)) {
+						continue;
+					}
+					if (remainTuple.get(repeatTbName + "_" + attName) == null || tuple.get(attName) == null
+							|| !remainTuple.get(repeatTbName + "_" + attName).equals(tuple.get(attName))) {
+						bool = false;
+						break;
+					}
 				}
-				if (remainTuple.get(tbName + "_" + attName) == null || tuple.get(attName) == null
-						|| !remainTuple.get(tbName + "_" + attName).equals(tuple.get(attName))) {
-					bool = false;
-					break;
-				}
+				if (bool)
+					iterator.remove();
 			}
-			if (bool)
-				iterator.remove();
 		}
 
 		return tuple;
