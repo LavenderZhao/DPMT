@@ -59,7 +59,7 @@ public class Main {
 	public String port = "5432";
 	public String usrName = "postgres";
 	public String psw = "123";
-	private String constraints = "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false |a=g]";
+	private String constraints = "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false]";
 	private String sqls = "SELECT  *\n" + "FROM  reader\n" + "WHERE rid = '4' and lastname = 'lastname_910_';";
 
 	private float epsilon = 0.1f;
@@ -175,10 +175,10 @@ public class Main {
 		/**********
 		 * if has two "reader" need to write as "reader","reader'" ex.
 		 * reader(firstname,lastname,rid,born,gender,phone),reader'(firstname,lastname,rid,born,gender,phone)
-		 * -: [ false |reader.rid = reader'.rid ,reader.firstname = reader'.firtname]
-		 * reader(a,b,c,d,e,f), reader'(g,h,c,i,j,k),.... -: [ false |a=g,...]
+		 * -: reader.rid = reader'.rid ,reader.firstname = reader'.firtname
+		 * reader(a,b,c,d,e,f), reader'(g,h,c,i,j,k),.... -: a=g,...
 		 *********/
-		// "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false |a=g]"
+		// "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: a=g"
 		constraintRewrite.parse(constraint);
 
 		/*********
