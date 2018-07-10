@@ -40,10 +40,10 @@ public class ConstraintRewrite2 {
 
 	}
 
-	public void DCsParse(String singleConstraint) { // reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k),... -: [ false |a=g,...]
+	public void DCsParse(String singleConstraint) { // reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k),... -: [ false]
 		try {
 			String leftAtoms = singleConstraint.split("-:")[0].trim(); // reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k),...
-			String rightAtoms = singleConstraint.split("-:")[1].trim(); // [false | a=g,...]
+			String rightAtoms = singleConstraint.split("-:")[1].trim(); // [false ]
 
 			/************
 			 * separately extracting the left part (ex.
@@ -77,7 +77,8 @@ public class ConstraintRewrite2 {
 				throw new Exception("constraint format error");
 
 			/************
-			 * separately extracting the right part (ex. [false | a=g,...])
+			 * separately extracting the right part (ex. [false] of {delete:[false | a=g,...]})
+			 * the following part can parse both [false] of [false | a=g,...]}
 			 ************/
 
 			String rightAtomsRule = "\\[\\s+false\\s+\\|{1}.*?\\]";
@@ -165,7 +166,7 @@ public class ConstraintRewrite2 {
 				} else
 					throw new Exception("constraint format error");
 
-				condintionLst.add(new ConditionStru(leftTerm, rightTerm, sign, false));
+				condintionLst.add(new ConditionStru(leftTerm, rightTerm, sign, true));
 			}
 
 			if (condintionLst.size() == 0)
