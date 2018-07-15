@@ -258,16 +258,22 @@ public class JdbcUtils {
 	 * @param tableName
 	 * @param conn
 	 */
-	public void updateTable(HashMap tuple, String tableName, Connection conn) {
+	public void InsertData(ArrayList<HashMap> Dlist, Connection conn) {
+		HashMap<String, String> Data = new HashMap<>();
+		for (HashMap tuple : Dlist) {
 
-		String data = "";
-		ArrayList<String> columnNames = baseDao.getColumnNames(tableName, conn);
-		for (String columnName : columnNames) {
-			data += " '" + tuple.get(columnName) + "', ";
+			String data = "";
+			ArrayList<String> columnNames = baseDao.getColumnNames((String) tuple.get("tableName"), conn);
+			for (String columnName : columnNames) {
+
+				data += " '" + tuple.get(columnName) + "', ";
+			}
+			data = data.substring(0, data.length() - 2);
+			Data.put(data, (String) tuple.get("tableName"));
 		}
-		data = data.substring(0, data.length() - 2);
+
 		// System.out.println("data:" + data);
-		baseDao.insertdata(conn, tableName, data);
+		baseDao.insertBanchdata(conn, Data);
 	}
 
 	public boolean queryRewrite(QueriesStru stru, Connection conn) {
@@ -282,8 +288,10 @@ public class JdbcUtils {
 			sql += " NEW_" + tableName + ",";
 		}
 		sql = sql.substring(0, sql.length() - 1);
-		sql += "\nWHERE " + stru.getWhere();
-		System.out.println(sql);
+		if (stru.getWhere() != "null") {
+			sql += "\nWHERE " + stru.getWhere();
+		}
+		// System.out.println(sql);
 		try {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);

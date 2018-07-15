@@ -10,13 +10,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class BaseDao {
 
 	public String dbName = "cqa";
 	public String port = "5432";
 	public String usrName = "postgres";
-	public String psw = "123";
+	public String psw = "";
 	public String sqlPath = "/Users/johnny/workplace/MSCProj/originQuery.sql";
 
 	private static final String SQL = "SELECT * FROM ";
@@ -94,8 +95,8 @@ public class BaseDao {
 		return dbLst;
 	}
 
-	public HashMap<String, ArrayList<String>> getTableSchema(Connection c) {
-		HashMap<String, ArrayList<String>> tableMap = new HashMap<String, ArrayList<String>>();
+	public HashMap<String, ArrayList> getTableSchema(Connection c) {
+		HashMap<String, ArrayList> tableMap = new HashMap<String, ArrayList>();
 		ResultSet tableSet;
 
 		try {
@@ -291,6 +292,24 @@ public class BaseDao {
 		} finally {
 			// System.out.println("Insert successfully！" + "\n");
 		}
+	}
+
+	public void insertBanchdata(Connection conn, HashMap<String, String> data) {
+		try {
+			Statement stmt = null;
+			stmt = conn.createStatement();
+			for (Map.Entry<String, String> entry : data.entrySet()) {
+				String sql = "insert into " + entry.getValue() + " VALUES ( " + entry.getKey() + ")";
+
+				stmt.addBatch(sql);
+			}
+			stmt.executeBatch();
+			stmt.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**

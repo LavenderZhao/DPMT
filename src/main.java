@@ -58,18 +58,16 @@ public class Main {
 	public String dbName = "cqa";
 	public String port = "5432";
 	public String usrName = "postgres";
-	public String psw = "123";
-	private String constraints = "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false]";
-	private String sqls = "SELECT  *\n" + "FROM  reader\n" + "WHERE rid = '4' and lastname = 'lastname_910_';";
-
+	public String psw = "";
+	public String sqlPath = "/Users/qq/Documents/GitHub/DPMT/sql/example.sql";
+	private String constraints = "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false |a=g]";
 	private float epsilon = 0.1f;
 	private float theta = 0.01f;
 	private static Connection c;
-
-	private static HashMap<String, ArrayList<String>> tableMap;
+	private HashMap<String, ArrayList> tableMap;
 	private ConstraintRewrite2 constraintRewrite;
 	private static JdbcUtils jdbcUtils = new JdbcUtils();
-	private static BaseDao baseDao = new BaseDao();
+	private BaseDao baseDao = new BaseDao();
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -83,6 +81,15 @@ public class Main {
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
 				try {
+					// remove the deletion table
+					// if(main.constraintStruLst != null){
+					// for(ConstraintStru2 constraintStru: main.constraintStruLst){
+					// int sequence = constraintStru.getSequence();
+					// String error_sql = "DROP TABLE delTable" + sequence + ";";
+					// main.postgreSQLJDBC.execute(c, error_sql,false);
+					// }
+					// }
+
 					c.close();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				} catch (SQLException e1) {
@@ -94,16 +101,9 @@ public class Main {
 	}
 
 	public Main() {
-		Main main = new Main();
-		c = baseDao.connectDB(); // init the connection of the database
+
+		c = baseDao.connectDB(address, port, dbName, usrName, psw); // init the connection of the database
 		tableMap = baseDao.getTableSchema(c); // the schema of the database
-		String sql = "SELECT  *\n" + "FROM  reader\n" + "WHERE rid = '4' and lastname = 'lastname_910_';";
-		try {
-			main.sampleFramework(constraints.trim(), sql, 0);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 	}
 
@@ -115,7 +115,6 @@ public class Main {
 		consText.setText(constraints);
 		errorText.setText(String.valueOf(epsilon));
 		confidenceText.setText(String.valueOf(theta));
-		queryText.setText(sqls);
 		ArrayList<String> dbLst = baseDao.getDbName(c);
 		for (String name : dbLst) {
 			dbBox.addItem(name);
@@ -147,9 +146,10 @@ public class Main {
 
 				try {
 					int sequence = 0; // record which constraint
+					String qText = queryText.getText().trim();
+					System.out.println("query:" + qText);
 					for (String constraint : consText.getText().split(";")) {
-						String sql = queryText.getText();
-						sampleFramework(constraint.trim(), sql, sequence);
+						sampleFramework(constraint.trim(), qText, sequence);
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
@@ -175,10 +175,10 @@ public class Main {
 		/**********
 		 * if has two "reader" need to write as "reader","reader'" ex.
 		 * reader(firstname,lastname,rid,born,gender,phone),reader'(firstname,lastname,rid,born,gender,phone)
-		 * -: reader.rid = reader'.rid ,reader.firstname = reader'.firtname
-		 * reader(a,b,c,d,e,f), reader'(g,h,c,i,j,k),.... -: a=g,...
+		 * -: [ false |reader.rid = reader'.rid ,reader.firstname = reader'.firtname]
+		 * reader(a,b,c,d,e,f), reader'(g,h,c,i,j,k),.... -: [ false |a=g,...]
 		 *********/
-		// "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: a=g"
+		// "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false |a=g]"
 		constraintRewrite.parse(constraint);
 
 		/*********
@@ -204,7 +204,20 @@ public class Main {
 		// String[ sql , attName1,attName2...]
 		ArrayList<HashMap> vioTupleMap = constraintRewrite.getVioTuples(depSqlArray, c, tableMap);
 
+		// create deletion table with same structure and store them in the deletion
+		// table
+
+		/*
+		 * String createDelTable = "CREATE TABLE del_" + depSqlArray[0] + sequence +
+		 * " AS SELECT * FROM " + depSqlArray[0] + " WHERE 1=2;"; String createDelSql =
+		 * constraintRewrite.createDeletionTableSql(depSqlArray[0],c,
+		 * tableMap.get(depSqlArray[0]),vioTuples, sequence);
+		 * postgreSQLJDBC.execute(c,createDelTable,false);
+		 * postgreSQLJDBC.execute(c,createDelSql,false);
+		 */
+
 		ConstraintStru constraintStru = new ConstraintStru(vioTupleMap, depSqlArray);
+		// System.out.println(sql);
 
 		outputText.append(depSqlArray[0] + "\n");
 
@@ -215,12 +228,12 @@ public class Main {
 		return constraintStru;
 	}
 
-	public void sampleFramework(String constraint, String sql, int sequence) throws SQLException {
+	public void sampleFramework(String constraint, String qText, int sequence) throws SQLException {
 		BaseDao basedao = new BaseDao();
+		Connection conn = basedao.connectDB();
 		int count = 0;
-
-		Random random = new Random(System.currentTimeMillis());
-		int m = (int) ((1 / (2 * epsilon)) * Math.log(2 / theta));
+		Random random = new Random();
+		int m = (int) ((1 / (2 * epsilon * epsilon)) * Math.log(2 / theta));
 		ArrayList<String> tableNames = basedao.getTableNames(c);
 
 		ConstraintStru constraintStru = violationCheck(constraint, sequence);
@@ -228,7 +241,8 @@ public class Main {
 		try {
 			// Run Row(SQL(theta)) for each constraint
 
-			for (int i = 0; i < 1; i++) {
+			for (int i = 0; i <= 0; i++) {
+				System.out.println("the " + i + " round!");
 
 				ArrayList<TableStru> tableList = constraintRewrite.getTableList();
 
@@ -237,31 +251,31 @@ public class Main {
 				// create delete table for each table
 				jdbcUtils.createDeleteTbale(c, tableNames);
 
+				// store tuples to delete
+				ArrayList<HashMap> dList = new ArrayList<HashMap>();
 				// markov chain provide the tuples which to delete next
 				while (randomMarkov.hasNext()) {
 
 					HashMap tuple = randomMarkov.next();
 					String tableName = (String) tuple.get("tableName");
+					tuple.put("tableName", "del_" + tableName);
+					dList.add(tuple);
+
 					// reader_rid,reader_firstname ...reader'_rid
-					jdbcUtils.updateTable(tuple, "del_" + tableName, c);
-
+					// System.out.println(tuple);
+					// jdbcUtils.updateTable(tuple, "del_" + tableName, c);
+					// System.out.println(tuple);
 				}
-
-				// create new view for each table which does not contain deleted tuple
+				jdbcUtils.InsertData(dList, c);
 				jdbcUtils.CreateDeleteView_NOTEXIST(c, tableNames);
-
-				// get the structure of query
-				QueriesStru stru = jdbcUtils.splitQuery(sql);
-
-				// check if the query is satisfied
+				QueriesStru stru = new QueriesStru();
+				stru = jdbcUtils.splitQuery(qText);
 				boolean flag = jdbcUtils.queryRewrite(stru, c);
 
-				// if yes, count plus 1
 				if (flag) {
 					count++;
 				}
-
-				// drop tables and views created in this turn
+				System.out.println("count: " + count);
 				jdbcUtils.DropDView(c, tableNames);
 				jdbcUtils.DropDTable(c, tableNames);
 			}

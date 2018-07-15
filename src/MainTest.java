@@ -19,12 +19,12 @@ import utils.JdbcUtils;
  */
 public class MainTest {
 
-	private static String constraints = "reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: [ false |a=g,b=h,d=i,e=j,k=f]";
+	private static String constraints = "borrow(a,b,c),borrow(d,b,e) -:  a=d,c=e";
 	private float epsilon = 0.1f;
 	private float theta = 0.01f;
 	private static Connection c;
 
-	private static HashMap<String, ArrayList<String>> tableMap;
+	private static HashMap<String, ArrayList> tableMap;
 	private ConstraintRewrite2 constraintRewrite;
 	private static JdbcUtils jdbcUtils = new JdbcUtils();
 	private static BaseDao baseDao = new BaseDao();
@@ -35,8 +35,13 @@ public class MainTest {
 		MainTest test = new MainTest();
 		c = baseDao.connectDB(); // init the connection of the database
 		tableMap = baseDao.getTableSchema(c); // the schema of the database
-		String sql = "SELECT  *\n" + "FROM  reader\n" + "WHERE rid = '4' and lastname = 'lastname_910_';";
+		String sql = "SELECT  *\n" + "FROM  borrow\n" + "WHERE rid = '3';";
 		test.sampleFramework(constraints.trim(), sql, 0);
+		/*
+		 * BaseDao basedao = new BaseDao(); ArrayList<String> tableNames =
+		 * basedao.getTableNames(c); jdbcUtils.DropDView(c, tableNames);
+		 * jdbcUtils.DropDTable(c, tableNames);
+		 */
 	}
 
 	/********
@@ -125,17 +130,22 @@ public class MainTest {
 				// create delete table for each table
 				jdbcUtils.createDeleteTbale(c, tableNames);
 
+				// store tuples to delete
+				ArrayList<HashMap> dList = new ArrayList<HashMap>();
 				// markov chain provide the tuples which to delete next
 				while (randomMarkov.hasNext()) {
 
 					HashMap tuple = randomMarkov.next();
 					String tableName = (String) tuple.get("tableName");
+					tuple.put("tableName", "del_" + tableName);
+					dList.add(tuple);
+
 					// reader_rid,reader_firstname ...reader'_rid
-					jdbcUtils.updateTable(tuple, "del_" + tableName, c);
-					System.out.println(tuple);
-
+					// System.out.println(tuple);
+					// jdbcUtils.updateTable(tuple, "del_" + tableName, c);
+					// System.out.println(tuple);
 				}
-
+				jdbcUtils.InsertData(dList, c);
 				jdbcUtils.CreateDeleteView_NOTEXIST(c, tableNames);
 				QueriesStru stru = jdbcUtils.splitQuery(sql);
 				boolean flag = jdbcUtils.queryRewrite(stru, c);
