@@ -230,19 +230,20 @@ public class Main {
 
 	public void sampleFramework(String constraint, String qText, int sequence) throws SQLException {
 		BaseDao basedao = new BaseDao();
-		Connection conn = basedao.connectDB();
 		int count = 0;
-		Random random = new Random();
+
+		Random random = new Random(System.currentTimeMillis());
 		int m = (int) ((1 / (2 * epsilon * epsilon)) * Math.log(2 / theta));
 		ArrayList<String> tableNames = basedao.getTableNames(c);
+		QueriesStru stru = jdbcUtils.splitQuery(qText, c);
 
 		ConstraintStru constraintStru = violationCheck(constraint, sequence);
-
+		HashMap<ArrayList<String>, Integer> tupleList = new HashMap<>();
 		try {
 			// Run Row(SQL(theta)) for each constraint
 
-			for (int i = 0; i <= 0; i++) {
-				System.out.println("the " + i + " round!");
+			for (int i = 0; i < m; i++) {
+				System.out.println("the " + (i + 1) + " round!");
 
 				ArrayList<TableStru> tableList = constraintRewrite.getTableList();
 
@@ -267,15 +268,10 @@ public class Main {
 					// System.out.println(tuple);
 				}
 				jdbcUtils.InsertData(dList, c);
-				jdbcUtils.CreateDeleteView_NOTEXIST(c, tableNames);
-				QueriesStru stru = new QueriesStru();
-				stru = jdbcUtils.splitQuery(qText);
-				boolean flag = jdbcUtils.queryRewrite(stru, c);
+				jdbcUtils.CreateDeleteView_NOTIN(c, tableNames);
 
-				if (flag) {
-					count++;
-				}
-				System.out.println("count: " + count);
+				tupleList = jdbcUtils.queryRewrite(stru, c, tupleList);
+
 				jdbcUtils.DropDView(c, tableNames);
 				jdbcUtils.DropDTable(c, tableNames);
 			}

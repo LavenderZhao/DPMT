@@ -70,7 +70,7 @@ public class JdbcUtils {
 	 * @param sqlText
 	 * @return QueriesStru stru
 	 */
-	public QueriesStru splitQuery(String sqlText) {
+	public QueriesStru splitQuery(String sqlText, Connection conn) {
 
 		String tmp;
 		String[] tmp2;
@@ -113,6 +113,13 @@ public class JdbcUtils {
 			}
 		}
 		stru.setTablelist(tablelist);
+		if (stru.getAtt().get(0).equals("*")) {
+			ArrayList<String> AttName = new ArrayList<>();
+			for (String tablename : tablelist) {
+				AttName.addAll(baseDao.getColumnNames(tablename, conn));
+			}
+			stru.setAtt(AttName);
+		}
 		// set constrains
 		// if query does not contain constrains, set where as "null"
 		if (splitsql.length != 1) {
@@ -170,10 +177,14 @@ public class JdbcUtils {
 		// FROM tableName
 		// WHERE NOT EXISTS (SELECT 1 FROM del_tableName)
 		for (String tableName : tableNames) {
-			String sql = "CREATE VIEW NEW_" + tableName + " AS \nSELECT * \nFROM " + tableName + "\nWHERE ";
-
-			sql += " NOT EXISTS (SELECT 1 FROM del_" + tableName + ");";
-			System.out.println(sql);
+			String sql = "CREATE VIEW NEW_" + tableName + " AS \nSELECT * \nFROM " + tableName
+					+ "\nWHERE NOT EXISTS (SELECT *\nFROM del_" + tableName + "\nWHERE ";
+			ArrayList<String> AttNames = baseDao.getColumnNames(tableName, conn);
+			for (String AttName : AttNames) {
+				sql += tableName + "." + AttName + " = del_" + tableName + "." + AttName + " AND ";
+			}
+			sql = sql.substring(0, sql.length() - 5);
+			sql += ");";
 
 			baseDao.executeSQL(sql, conn);
 		}
@@ -276,10 +287,10 @@ public class JdbcUtils {
 		baseDao.insertBanchdata(conn, Data);
 	}
 
-	public boolean queryRewrite(QueriesStru stru, Connection conn) {
+	public HashMap<ArrayList<String>, Integer> queryRewrite(QueriesStru stru, Connection conn,
+			HashMap<ArrayList<String>, Integer> tupleList) {
 
 		Statement stmt = null;
-		Boolean bool = false;
 		ResultSet rs = null;
 
 		String sql = stru.getSelect() + "\nFROM";
@@ -296,16 +307,26 @@ public class JdbcUtils {
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				bool = true;
-				System.out.println(rs.getString(1) + "\t" + rs.getString(2));
-				// System.out.println(rs.getString(1));
+
+				ArrayList<String> tuple = new ArrayList<>();
+				// System.out.println(stru.getAtt().size());
+				for (int i = 1; i <= stru.getAtt().size(); i++) {
+					tuple.add(rs.getString(i));
+				}
+				if (tupleList.containsKey(tuple)) {
+					int count = tupleList.get(tuple);
+					count++;
+					tupleList.put(tuple, count);
+				} else {
+					tupleList.put(tuple, 1);
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return bool;
+		return tupleList;
 	}
 
 }

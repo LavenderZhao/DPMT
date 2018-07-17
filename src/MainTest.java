@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import dao.BaseDao;
@@ -35,13 +36,15 @@ public class MainTest {
 		MainTest test = new MainTest();
 		c = baseDao.connectDB(); // init the connection of the database
 		tableMap = baseDao.getTableSchema(c); // the schema of the database
-		String sql = "SELECT  *\n" + "FROM  borrow\n" + "WHERE rid = '3';";
+		String sql = "SELECT  *\n" + "FROM  borrow\n" + "WHERE rid = '3'";
 		test.sampleFramework(constraints.trim(), sql, 0);
+
 		/*
 		 * BaseDao basedao = new BaseDao(); ArrayList<String> tableNames =
 		 * basedao.getTableNames(c); jdbcUtils.DropDView(c, tableNames);
 		 * jdbcUtils.DropDTable(c, tableNames);
 		 */
+
 	}
 
 	/********
@@ -112,16 +115,17 @@ public class MainTest {
 		int count = 0;
 
 		Random random = new Random(System.currentTimeMillis());
-		int m = (int) ((1 / (2 * epsilon)) * Math.log(2 / theta));
+		int m = (int) ((1 / (2 * epsilon * epsilon)) * Math.log(2 / theta));
 		ArrayList<String> tableNames = basedao.getTableNames(c);
+		QueriesStru stru = jdbcUtils.splitQuery(sql, c);
 
 		ConstraintStru constraintStru = violationCheck(constraint, sequence);
-
+		HashMap<ArrayList<String>, Integer> tupleList = new HashMap<>();
 		try {
 			// Run Row(SQL(theta)) for each constraint
 
-			for (int i = 0; i < 1; i++) {
-				System.out.println("the " + i + " round!");
+			for (int i = 0; i < m; i++) {
+				System.out.println("the " + (i + 1) + " round!");
 
 				ArrayList<TableStru> tableList = constraintRewrite.getTableList();
 
@@ -147,13 +151,8 @@ public class MainTest {
 				}
 				jdbcUtils.InsertData(dList, c);
 				jdbcUtils.CreateDeleteView_NOTEXIST(c, tableNames);
-				QueriesStru stru = jdbcUtils.splitQuery(sql);
-				boolean flag = jdbcUtils.queryRewrite(stru, c);
 
-				if (flag) {
-					count++;
-				}
-				System.out.println("count: " + count);
+				tupleList = jdbcUtils.queryRewrite(stru, c, tupleList);
 
 				jdbcUtils.DropDView(c, tableNames);
 				jdbcUtils.DropDTable(c, tableNames);
@@ -162,7 +161,23 @@ public class MainTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(count + "/" + m);
+		for (String att : stru.getAtt()) {
+			// System.out.println(att);
+			System.out.print(att + "    ");
+		}
+		System.out.println();
+
+		for (Map.Entry<ArrayList<String>, Integer> entry : tupleList.entrySet()) {
+			ArrayList<String> tuple = entry.getKey();
+
+			for (String att : tuple) {
+
+				System.out.print(att + "\t");
+			}
+			float p = (float) entry.getValue() / (float) m;
+			System.out.println("probablity: " + p);
+
+		}
 
 	}
 
