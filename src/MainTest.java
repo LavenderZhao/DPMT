@@ -1,10 +1,3 @@
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 import dao.BaseDao;
 import model.ConstraintStru;
 import model.QueriesStru;
@@ -12,6 +5,13 @@ import model.RandomMarkov;
 import model.TableStru;
 import utils.ConstraintRewrite2;
 import utils.JdbcUtils;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * 
@@ -124,7 +124,7 @@ public class MainTest {
 		try {
 			// Run Row(SQL(theta)) for each constraint
 
-			for (int i = 0; i < m; i++) {
+			for (int i = 0; i < 5; i++) {
 				System.out.println("the " + (i + 1) + " round!");
 
 				ArrayList<TableStru> tableList = constraintRewrite.getTableList();
@@ -144,10 +144,7 @@ public class MainTest {
 					tuple.put("tableName", "del_" + tableName);
 					dList.add(tuple);
 
-					// reader_rid,reader_firstname ...reader'_rid
-					// System.out.println(tuple);
-					// jdbcUtils.updateTable(tuple, "del_" + tableName, c);
-					// System.out.println(tuple);
+
 				}
 				jdbcUtils.InsertData(dList, c);
 				jdbcUtils.CreateDeleteView_NOTEXIST(c, tableNames);

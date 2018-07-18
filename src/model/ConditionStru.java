@@ -39,7 +39,7 @@ public class ConditionStru {
 			if (!isNot)
 				this.sign = Sign.greater;
 			else
-				this.sign = Sign.greaterORequal;
+				this.sign = Sign.lessORequal;
 			break;
 		case "<>":
 			if (!isNot)

@@ -178,7 +178,7 @@ public class JdbcUtils {
 		// WHERE NOT EXISTS (SELECT 1 FROM del_tableName)
 		for (String tableName : tableNames) {
 			String sql = "CREATE VIEW NEW_" + tableName + " AS \nSELECT * \nFROM " + tableName
-					+ "\nWHERE NOT EXISTS (SELECT *\nFROM del_" + tableName + "\nWHERE ";
+					+ "\nWHERE NOT EXISTS (SELECT 1\nFROM del_" + tableName + "\nWHERE ";
 			ArrayList<String> AttNames = baseDao.getColumnNames(tableName, conn);
 			for (String AttName : AttNames) {
 				sql += tableName + "." + AttName + " = del_" + tableName + "." + AttName + " AND ";
