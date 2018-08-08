@@ -1,5 +1,8 @@
 package utils;
 
+import dao.BaseDao;
+import model.QueriesStru;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,9 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import dao.BaseDao;
-import model.QueriesStru;
 
 /**
  * 
@@ -87,7 +87,7 @@ public class JdbcUtils {
 		tmp = split2[1];
 		split2 = tmp.split(",");
 		for (int i = 0; i < split2.length; i++) {
-			if (!split2[i].isEmpty() && !split2[i].equals(" ")) {
+			if (!split2[i].isEmpty() && !split2[i].equals(" ") && !split2[i].equals("distinct")) {
 				attlist.add(split2[i].trim());
 
 			}
@@ -120,8 +120,8 @@ public class JdbcUtils {
 			}
 			stru.setAtt(AttName);
 		}
-		// set constrains
-		// if query does not contain constrains, set where as "null"
+		// set constraints
+		// if query does not contain constraints, set where as "null"
 		if (splitsql.length != 1) {
 			tmp = splitsql[1].trim().substring(splitsql[1].trim().length() - 1, splitsql[1].trim().length());
 			// System.out.println("tmp:" + tmp);
@@ -220,7 +220,7 @@ public class JdbcUtils {
 			if (baseDao.validateTableNameExist("del_" + tableName, conn)) {
 				// DROP TABLE del_tableName
 				String sql = "DROP TABLE del_" + tableName + ";";
-				// System.out.println(sql);
+				 System.out.println(sql);
 				baseDao.executeSQL(sql, conn);
 			}
 
@@ -262,11 +262,9 @@ public class JdbcUtils {
 
 	}
 
-	/**
-	 * Add new tuple to deleted into del_table
-	 * 
-	 * @param tuple
-	 * @param tableName
+	/*****
+	 *
+	 * @param Dlist
 	 * @param conn
 	 */
 	public void InsertData(ArrayList<HashMap> Dlist, Connection conn) {
@@ -281,6 +279,7 @@ public class JdbcUtils {
 			}
 			data = data.substring(0, data.length() - 2);
 			Data.put(data, (String) tuple.get("tableName"));
+			//baseDao.insertdata(conn, (String) tuple.get("tableName"), data);
 		}
 
 		// System.out.println("data:" + data);
@@ -293,18 +292,19 @@ public class JdbcUtils {
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sql = stru.getSelect() + "\nFROM";
+		String sql = stru.getSelect() + "\nFROM " + stru.getFrom();
 		ArrayList<String> tablelist = stru.getTablelist();
 		for (String tableName : tablelist) {
-			sql += " NEW_" + tableName + ",";
+			sql.replace(tableName, "NEW_"+tableName);
 		}
-		sql = sql.substring(0, sql.length() - 1);
+
 		if (stru.getWhere() != "null") {
 			sql += "\nWHERE " + stru.getWhere();
 		}
 		// System.out.println(sql);
 		try {
 			stmt = conn.createStatement();
+			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 

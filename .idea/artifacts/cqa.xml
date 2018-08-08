@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="cqa">
+    <output-path>$PROJECT_DIR$/out/artifacts/cqa</output-path>
+    <root id="archive" name="cqa.jar">
+      <element id="module-output" name="DPMT" />
+      <element id="library" level="module" name="postgresql-42.2.2.jar" module-name="DPMT" />
+    </root>
+  </artifact>
+</component>

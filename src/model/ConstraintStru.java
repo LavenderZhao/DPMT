@@ -5,27 +5,29 @@ import java.util.HashMap;
 
 public class ConstraintStru {
 	private ArrayList<HashMap> vioTupleMap;
-	private String[] depSqlArray;
-	private int sequence;
+	private String depSql;
+	private ArrayList<TableStru> tableList;
+	private String sequence;
 
-	public ConstraintStru(ArrayList<HashMap> vioTupleMap, String[] depSql) {
+	public ConstraintStru(ArrayList<HashMap> vioTupleMap, String depSql, ArrayList<TableStru> tableList, String sequence){
 		this.vioTupleMap = vioTupleMap;
-		this.depSqlArray = depSql;
+		this.depSql = depSql;
+		this.tableList = tableList;
+		this.sequence =sequence;
 	}
 
 	public ArrayList<HashMap> getVioTupleMap() {
 		return vioTupleMap;
 	}
 
-	public String[] getDepSqlLst() {
-		return depSqlArray;
+	public String getDepSql() {
+		return depSql;
 	}
 
-	public int getSequence() {
+	public String getSequence() {
 		return sequence;
 	}
-
-	public void setSequence(int sequence) {
-		this.sequence = sequence;
+	public ArrayList<TableStru> getTableList() {
+		return tableList;
 	}
 }

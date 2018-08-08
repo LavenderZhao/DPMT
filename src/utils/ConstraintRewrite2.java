@@ -1,6 +1,5 @@
 package utils;
 
-
 import model.ConditionStru;
 import model.TableStru;
 
@@ -11,7 +10,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SplittableRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +22,7 @@ public class ConstraintRewrite2 {
     private HashMap<String,ArrayList<HashMap>> vioTupleMap = new HashMap<>();
 
 
-    public void parse(String singleConstraint){
+    public void parse(String singleConstraint, String sequence){
         // EGD: reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k) -: a=g
         // DC: reader(a,b,c,d,e,f),reader'(g,h,c,i,j,k),a = g -: false
 
@@ -35,14 +33,14 @@ public class ConstraintRewrite2 {
         Matcher rightAtomsMatcher = rightAtomsPattern.matcher(rightAtoms);
 
         if (rightAtomsMatcher.matches()) {
-            DCsParse(singleConstraint);
+            DCsParse(singleConstraint, sequence);
         }else {
-            EGDsParse(singleConstraint);
+            EGDsParse(singleConstraint, sequence);
         }
 
     }
 
-    public void DCsParse(String singleConstraint){ //reader(a,b,c,d,e,f),reader(g,h,c,i,j,k),a=g,... -:  false
+    public void DCsParse(String singleConstraint, String sequence){ //reader(a,b,c,d,e,f),reader(g,h,c,i,j,k),a=g,... -:  false
         try {
             /************
              check the format
@@ -69,7 +67,7 @@ public class ConstraintRewrite2 {
             while (tableMatcher.find()) {
                 String tableString = tableMatcher.group(0).replaceAll(",|\\)"," "); //reader(a,b,c,d,e,f)
                 String tableName = tableString.split("\\(")[0].trim(); //reader
-                String nickName = "TB" + tableCount; // TB0
+                String nickName = "TB" + tableCount + "_" + sequence; // TB0_1 for sequence 1
                 ArrayList attLst = new ArrayList();
                 for (String s : tableString.split("\\(")[1].trim().split(" ")){ //a
                     attLst.add(s);  // ArrayList[a , b, ...]
@@ -122,7 +120,7 @@ public class ConstraintRewrite2 {
         }
     }
 
-    public void EGDsParse(String singleConstraint){ //reader(a,b,c,d,e,f),reader(g,h,c,i,j,k),... -: a=g,...
+    public void EGDsParse(String singleConstraint, String sequence){ //reader(a,b,c,d,e,f),reader(g,h,c,i,j,k),... -: a=g,...
         try {
 
             /************
@@ -150,7 +148,7 @@ public class ConstraintRewrite2 {
             while (leftAtomsMatcher.find()) {
                 String tableString = leftAtomsMatcher.group(0).replaceAll(",|\\)"," "); //reader(a,b,...)
                 String tableName = tableString.split("\\(")[0].trim(); //reader
-                String nickName = "TB" + tableCount; // TB0
+                String nickName = "TB" + tableCount + "_" + sequence; // TB0_1 for sequence 1
                 ArrayList attLst = new ArrayList();
                 for (String s : tableString.split("\\(")[1].trim().split(" ")){ //att1
                     attLst.add(s);  // ArrayList[a , b, ...]
@@ -230,7 +228,7 @@ public class ConstraintRewrite2 {
      * @return ArrayList<String[queryTbName, sql , attName1,attName2...]>
      * @throws SQLException
      */
-    public String[] rewrite( HashMap<String,ArrayList> tableMap) throws SQLException {
+    public String rewrite( HashMap<String,ArrayList> tableMap) throws SQLException {
 
         /**********
          rewrite the first part of SQL, ex("SELECT DISTINCT * FROM reader as TB0, reader as TB1 WHERE)
@@ -239,7 +237,7 @@ public class ConstraintRewrite2 {
         HashMap tbRecord = new HashMap();
         for (TableStru tableStru : tableList) {
             String tbName = tableStru.getTableName(); // reader
-            String nickName = tableStru.getNickName(); // TB0
+            String nickName = tableStru.getNickName(); // TB0_1
             tbRecord.put(nickName, tbName);
             sql += tbName.replaceAll("'", "") + " AS " + nickName + " ,";
         }
@@ -252,8 +250,9 @@ public class ConstraintRewrite2 {
          rewrite the equality by finding the same symbol in different table
          find the attribute name by the regarding symbol
          ***********/
-        ArrayList<String> attNameLst = new ArrayList<>(); //record the attributes name which has equal attribute in different table
+
         for (Map.Entry entry : symbolMap.entrySet()) {
+            ArrayList<String> attNameLst = new ArrayList<>(); //record the attributes name which has equal attribute in different table
             // iteratively find regarding tables when a symbol has more than 2 tables using it (c -> TB0,TB1)
             if (((ArrayList<String>) entry.getValue()).size() >= 2) {
 
@@ -334,14 +333,8 @@ public class ConstraintRewrite2 {
         }
         sql = sql.substring(0, sql.length() - 4);
         sql += ";";
-        String[] depSql = new String[1 + attNameLst.size()];  // [queryTbName, sql , attName]
 
-        depSql[0] = sql;
-        for(int i = 0 ; i < attNameLst.size() ; i++){
-            depSql[1 + i] =  attNameLst.get(i);
-        }
-
-        return depSql;
+        return sql;
     }
 
     public String createDeletionTableSql(String tableName, Connection c, ArrayList<String> attNameLst, ArrayList<HashMap> vioTuples,int sequence) {
@@ -368,16 +361,16 @@ public class ConstraintRewrite2 {
 
     /*********
      *
-     * @param depSqlArray String[queryTbName, sql , attName1,attName2...]
+     * @param sql String[queryTbName, sql , attName1,attName2...]
      * @param c
      * @param tableMap
      * @return
      * @throws SQLException
      */
-    public ArrayList<HashMap> getVioTuples(String[] depSqlArray, Connection c,HashMap<String,ArrayList> tableMap) throws SQLException {
+    public ArrayList<HashMap> getVioTuples(String sql, Connection c,HashMap<String,ArrayList> tableMap, String sequence) throws SQLException {
         ArrayList<HashMap> vioTuples = new ArrayList<>();  // <tableName,<attributeName,value>>
         Statement stmt = c.createStatement();
-        ResultSet rs = stmt.executeQuery(depSqlArray[0]);
+        ResultSet rs = stmt.executeQuery(sql);
 
 
         // have equal attributes in different tables
@@ -397,6 +390,7 @@ public class ConstraintRewrite2 {
 					partTuple.put(attName,attValue);  // reader_rid,reader_firstname ...reader'_rid
                 }
 				completeTuple.put(nickName,partTuple);
+                completeTuple.put("sequence",sequence);
             }
             vioTuples.add(completeTuple);
         }

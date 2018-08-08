@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 interface MarkovTree extends Iterator {
-	ConstraintStru constraintStru = null;
+	ViolationStru violationStru = null;
 
 	public boolean hasNext();
 

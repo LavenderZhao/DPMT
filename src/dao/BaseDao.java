@@ -14,12 +14,6 @@ import java.util.Map;
 
 public class BaseDao {
 
-	public String dbName = "cqa";
-	public String port = "5432";
-	public String usrName = "postgres";
-	public String psw = "";
-	public String sqlPath = "/Users/johnny/workplace/MSCProj/originQuery.sql";
-
 	private static final String SQL = "SELECT * FROM ";
 
 	/**
@@ -27,20 +21,6 @@ public class BaseDao {
 	 * 
 	 * @return
 	 */
-	public Connection connectDB() {
-		Connection c = null;
-		try {
-			Class.forName("org.postgresql.Driver");
-			c = DriverManager.getConnection("jdbc:postgresql://localhost:" + port + "/" + dbName, usrName, psw);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			System.exit(0);
-		}
-		System.out.println("Opened database successfully");
-		return c;
-	}
-
 	public Connection connectDB(String address, String port, String dbName, String usrName, String psw) {
 		Connection c = null;
 		try {
@@ -206,41 +186,6 @@ public class BaseDao {
 		return columnTypes;
 	}
 
-	/**
-	 * get comments of column
-	 * 
-	 * @param tableName
-	 * @return
-	 */
-	public ArrayList<String> getColumnComments(String tableName) {
-
-		Connection conn = connectDB();
-		PreparedStatement pStemt = null;
-		String tableSql = SQL + tableName;
-		ArrayList<String> columnComments = new ArrayList<>();
-		ResultSet rs = null;
-		try {
-			pStemt = conn.prepareStatement(tableSql);
-			rs = pStemt.executeQuery("show full columns from " + tableName);
-			while (rs.next()) {
-				columnComments.add(rs.getString("Comment"));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-					closeConnection(conn);
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.err.println("getColumnComments close ResultSet and connection failure: " + e.getMessage());
-					System.exit(0);
-				}
-			}
-		}
-		return columnComments;
-	}
 
 	/**
 	 * Get primary key
@@ -296,16 +241,23 @@ public class BaseDao {
 
 	public void insertBanchdata(Connection conn, HashMap<String, String> data) {
 		try {
+			conn.setAutoCommit(false);
 			Statement stmt = null;
 			stmt = conn.createStatement();
+			int i = 0;
 			for (Map.Entry<String, String> entry : data.entrySet()) {
 				String sql = "insert into " + entry.getValue() + " VALUES ( " + entry.getKey() + ")";
 
 				stmt.addBatch(sql);
+				i++;
+				if(i%1000==0){//可以设置不同的大小；如50，100，500，1000等等
+					stmt.executeBatch();
+					conn.commit();
+					stmt.clearBatch();
+				}
 			}
 			stmt.executeBatch();
 			stmt.close();
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
