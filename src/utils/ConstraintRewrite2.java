@@ -1,5 +1,6 @@
 package utils;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import model.ConditionStru;
 import model.TableStru;
 
@@ -10,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SplittableRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -255,22 +257,36 @@ public class ConstraintRewrite2 {
             ArrayList<String> attNameLst = new ArrayList<>(); //record the attributes name which has equal attribute in different table
             // iteratively find regarding tables when a symbol has more than 2 tables using it (c -> TB0,TB1)
             if (((ArrayList<String>) entry.getValue()).size() >= 2) {
+                ArrayList<String> usedNickNameList = new ArrayList<>(); // store the used nick name
 
                 ArrayList<String> nickNameLst = new ArrayList<>(); //record the nickname of the name
+
+
                 for (String nickName : ((ArrayList<String>) entry.getValue())) {
+                    if(usedNickNameList.contains(nickName)) continue;
                     String realTbName = "";
-                    int index = 0;
+                    ArrayList<Integer> indexList = new ArrayList();
                     for (TableStru tableStru : tableList) {
                         if (tableStru.getNickName().equals(nickName)) {  // find real table name by nickname
-                            index = tableStru.getAttList().indexOf(entry.getKey());  // c -> 2 ("rid" is the 3rd attribute of reader table)
+                            usedNickNameList.add(nickName); // add the nick name
+
+                            for(int i = 0; i<tableStru.getAttList().size(); i++){
+                                if(tableStru.getAttList().get(i).equals(entry.getKey())){
+                                    indexList.add(i);
+                                }
+                            }
+                            // c -> 2 ("rid" is the 3rd attribute of reader table)
                             realTbName = tableStru.getTableName();
                             break;
                         }
                     }
 
-                    // find the attribute name by symbel attName records all the regarding attributes in the
-                    attNameLst.add(((ArrayList<String>) tableMap.get(realTbName)).get(index));
-                    nickNameLst.add(nickName);
+                    // find the attribute name by symbol attName records all the regarding attributes in the
+                    for(int index: indexList){
+                        attNameLst.add(((ArrayList<String>) tableMap.get(realTbName)).get(index));
+                        nickNameLst.add(nickName);
+                    }
+
                 }
 
                 //start rewrite the equal condition

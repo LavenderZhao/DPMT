@@ -8,55 +8,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10adb760-ab0c-44ad-8146-cb76f64e2cc2" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/DPMT_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/cqa.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/school.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sql/teacher.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DPMT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/DPMT.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Main$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Main$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Main$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Main$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Main$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Main$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Main$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Main.form" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Main.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/MainTest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/AbstractLayout.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/AbstractLayout.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/DimensionInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/DimensionInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/GridConstraints.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/GridConstraints.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/GridLayoutManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/GridLayoutManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/HorizontalInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/HorizontalInfo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/LayoutState.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/LayoutState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/Spacer.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/Spacer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/SupportCode$TextWithMnemonic.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/SupportCode$TextWithMnemonic.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/SupportCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/SupportCode.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/Util.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/Util.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/VerticalInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/intellij/uiDesigner/core/VerticalInfo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/dao/BaseDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/dao/BaseDao.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/main.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/ConditionStru$1.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/model/ConditionStru.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/model/ConditionStru.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/model/ConstraintStru.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/model/ConstraintStru.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/model/Constraints.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/model/MarkovTree.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/model/MarkovTree.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/model/QueriesStru.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/model/QueriesStru.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/RandomMarkov.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/model/RandomMarkov.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/model/Sign.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/model/Sign.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/TableStru.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/model/TableStru.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/model/ViolationStru.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/utils/ConstraintRewrite2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/utils/ConstraintRewrite2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/utils/JdbcUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/utils/JdbcUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/postgresql-42.2.2.jar" beforeDir="false" afterPath="$PROJECT_DIR$/postgresql-42.2.2.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/datafiller.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/datafiller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/example.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/example.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/library.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/library.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/library_1.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/library_1.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/query.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/query.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MainTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dao/BaseDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dao/BaseDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/ConstraintStru.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/ConstraintStru.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Constraints.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/MarkovTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/MarkovTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/RandomMarkov.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RandomMarkov.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/ConstraintRewrite2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/ConstraintRewrite2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/JdbcUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/JdbcUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql/teacher_test_data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql/teacher_test_data.sql" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -92,7 +63,7 @@
       <file leaf-file-name="BaseDao.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/dao/BaseDao.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
+            <state relative-caret-position="4710">
               <caret line="324" column="28" selection-start-line="324" selection-start-column="28" selection-end-line="324" selection-end-column="28" />
             </state>
           </provider>
@@ -101,14 +72,10 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1075">
-              <caret line="317" column="51" lean-forward="true" selection-start-line="317" selection-start-column="51" selection-end-line="317" selection-end-column="51" />
+            <state relative-caret-position="4530">
+              <caret line="317" column="51" selection-start-line="317" selection-start-column="51" selection-end-line="317" selection-end-column="51" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#4401#5704#0" expanded="true" />
-                <element signature="e#5703#5704#0" expanded="true" />
-                <element signature="e#5745#6625#0" expanded="true" />
-                <element signature="e#6624#6625#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -122,26 +89,40 @@
       <file leaf-file-name="RandomMarkov.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/RandomMarkov.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="61">
+            <state relative-caret-position="195">
               <caret line="15" column="11" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JdbcUtils.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="JdbcUtils.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils/JdbcUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-370">
+            <state relative-caret-position="2025">
               <caret line="147" column="16" selection-start-line="147" selection-start-column="16" selection-end-line="147" selection-end-column="16" />
             </state>
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="LICENSE" pinned="false" current-in-tab="true">
+        <entry file="jar://$PROJECT_DIR$/postgresql-42.2.2.jar!/META-INF/LICENSE">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
       <file leaf-file-name="ConstraintRewrite2.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils/ConstraintRewrite2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1986">
-              <caret line="395" column="9" lean-forward="true" selection-start-line="395" selection-start-column="9" selection-end-line="395" selection-end-column="9" />
+            <state relative-caret-position="288">
+              <caret line="395" column="9" selection-start-line="395" selection-start-column="9" selection-end-line="395" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="teacher.sql" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sql/teacher.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -169,12 +150,12 @@
         <option value="$PROJECT_DIR$/sql/library.sql" />
         <option value="$PROJECT_DIR$/sql/school.sql" />
         <option value="$PROJECT_DIR$/sql/teacher_test_data.sql" />
-        <option value="$PROJECT_DIR$/sql/teacher.sql" />
         <option value="$PROJECT_DIR$/src/MainTest.java" />
         <option value="$PROJECT_DIR$/src/Main.form" />
         <option value="$PROJECT_DIR$/src/dao/BaseDao.java" />
         <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/utils/JdbcUtils.java" />
+        <option value="$PROJECT_DIR$/sql/teacher.sql" />
       </list>
     </option>
   </component>
@@ -188,17 +169,15 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="20" />
-    <option name="y" value="43" />
-    <option name="width" value="1260" />
-    <option name="height" value="753" />
+    <option name="y" value="23" />
+    <option name="width" value="1280" />
+    <option name="height" value="773" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -215,20 +194,39 @@
               <item name="DPMT" type="b2602c69:ProjectViewProjectNode" />
               <item name="DPMT" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="dao" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="DPMT" type="b2602c69:ProjectViewProjectNode" />
               <item name="DPMT" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
+              <item name="postgresql-42.2.2.jar" type="ab9368bb:PsiFileNode" />
+            </path>
+            <path>
+              <item name="DPMT" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DPMT" type="462c0819:PsiDirectoryNode" />
+              <item name="postgresql-42.2.2.jar" type="ab9368bb:PsiFileNode" />
+              <item name="META-INF" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DPMT" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DPMT" type="462c0819:PsiDirectoryNode" />
+              <item name="postgresql-42.2.2.jar" type="ab9368bb:PsiFileNode" />
+              <item name="postgresql" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="DPMT" type="b2602c69:ProjectViewProjectNode" />
+              <item name="DPMT" type="462c0819:PsiDirectoryNode" />
+              <item name="postgresql-42.2.2.jar" type="ab9368bb:PsiFileNode" />
+              <item name="postgresql" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -346,18 +344,18 @@
       <workItem from="1532895675234" duration="7475000" />
       <workItem from="1533319571972" duration="207000" />
       <workItem from="1533400759178" duration="15065000" />
+      <workItem from="1533757893398" duration="2060000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="60599000" />
+    <option name="totallyTimeSpent" value="62659000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="20" y="43" width="1260" height="753" extended-state="0" />
+    <frame x="0" y="23" width="1280" height="773" extended-state="0" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.3270142" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
@@ -365,24 +363,25 @@
       <window_info anchor="right" id="Maven Projects" order="7" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="10" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32543445" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32543445" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3191153" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48243558" visible="true" weight="0.16584565" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" visible="true" weight="0.24958949" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48085758" visible="true" weight="0.16558966" />
       <window_info anchor="right" id="Database" order="6" />
-      <window_info active="true" id="Structure" order="1" sideWeight="0.5175644" side_tool="true" visible="true" weight="0.16584565" />
+      <window_info id="Structure" order="1" sideWeight="0.51914245" side_tool="true" visible="true" weight="0.16558966" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.24958949" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" visible="true" weight="0.24958949" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.3270142" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -401,23 +400,10 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/utils/JdbcUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="123">
-          <caret line="26" column="77" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sql/name.txt" />
     <entry file="file://$PROJECT_DIR$/sql/library_test_data_1.sql" />
     <entry file="file://$PROJECT_DIR$/sql/class_test_data.sql" />
-    <entry file="file://$PROJECT_DIR$/src/File.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="12" column="70" selection-start-line="12" selection-start-column="70" selection-end-line="12" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/File.java" />
     <entry file="file://$PROJECT_DIR$/sql/class.sql" />
     <entry file="file://$PROJECT_DIR$/sql/lastname.txt" />
     <entry file="file://$PROJECT_DIR$/sql/school_test_data.sql" />
@@ -431,23 +417,8 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sql/student.sql" />
-    <entry file="file://$PROJECT_DIR$/src/model/Constraints.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="27" column="46" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/MainTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="31" column="27" selection-start-line="27" selection-start-column="4" selection-end-line="31" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/Constraints.java" />
+    <entry file="file://$PROJECT_DIR$/src/MainTest.java" />
     <entry file="file://$PROJECT_DIR$/src/dao/BaseDao.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4075">
@@ -464,10 +435,6 @@
           <caret line="69" column="43" selection-start-line="69" selection-start-column="34" selection-end-line="69" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4401#5704#0" expanded="true" />
-            <element signature="e#5703#5704#0" expanded="true" />
-            <element signature="e#5745#6625#0" expanded="true" />
-            <element signature="e#6624#6625#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -488,10 +455,6 @@
           <caret line="82" column="4" selection-start-line="82" selection-start-column="4" selection-end-line="82" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4401#5704#0" expanded="true" />
-            <element signature="e#5703#5704#0" expanded="true" />
-            <element signature="e#5745#6625#0" expanded="true" />
-            <element signature="e#6624#6625#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -505,10 +468,6 @@
           <caret line="82" column="4" lean-forward="true" selection-start-line="82" selection-start-column="4" selection-end-line="82" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4401#5704#0" expanded="true" />
-            <element signature="e#5703#5704#0" expanded="true" />
-            <element signature="e#5745#6625#0" expanded="true" />
-            <element signature="e#6624#6625#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -529,10 +488,6 @@
           <caret line="103" selection-start-line="103" selection-end-line="103" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4401#5704#0" expanded="true" />
-            <element signature="e#5703#5704#0" expanded="true" />
-            <element signature="e#5745#6625#0" expanded="true" />
-            <element signature="e#6624#6625#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -607,13 +562,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sql/teacher.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/ConditionStru.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-539">
@@ -621,16 +569,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MainTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2430">
-          <caret line="175" column="38" selection-start-line="175" selection-start-column="38" selection-end-line="175" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MainTest.java" />
     <entry file="file://$PROJECT_DIR$/src/model/ConstraintStru.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -641,47 +580,53 @@
     <entry file="file://$PROJECT_DIR$/src/Main.form">
       <provider selected="true" editor-type-id="ui-designer" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils/ConstraintRewrite2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1986">
-          <caret line="395" column="9" lean-forward="true" selection-start-line="395" selection-start-column="9" selection-end-line="395" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/dao/BaseDao.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
+        <state relative-caret-position="4710">
           <caret line="324" column="28" selection-start-line="324" selection-start-column="28" selection-end-line="324" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/RandomMarkov.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="61">
+        <state relative-caret-position="195">
           <caret line="15" column="11" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1075">
-          <caret line="317" column="51" lean-forward="true" selection-start-line="317" selection-start-column="51" selection-end-line="317" selection-end-column="51" />
+        <state relative-caret-position="4530">
+          <caret line="317" column="51" selection-start-line="317" selection-start-column="51" selection-end-line="317" selection-end-column="51" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4401#5704#0" expanded="true" />
-            <element signature="e#5703#5704#0" expanded="true" />
-            <element signature="e#5745#6625#0" expanded="true" />
-            <element signature="e#6624#6625#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/ConstraintRewrite2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="395" column="9" selection-start-line="395" selection-start-column="9" selection-end-line="395" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sql/teacher.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/JdbcUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-370">
+        <state relative-caret-position="2025">
           <caret line="147" column="16" selection-start-line="147" selection-start-column="16" selection-end-line="147" selection-end-column="16" />
         </state>
       </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/postgresql-42.2.2.jar!/META-INF/LICENSE">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
   <component name="masterDetails">
