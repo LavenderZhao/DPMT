@@ -305,11 +305,10 @@ public class ConstraintRewrite2 {
             String leftTerm = conditionStru.getLeftTerm();  //a
             String rightTerm = conditionStru.getRightTerm();  //g
 
-            Pattern numericPattern = Pattern.compile("^[-\\+]?[\\d|.]*?$");
-            // find the left part of condition, numeric or attribute
-            String leftCondition = "";
-            if(numericPattern.matcher(leftTerm).matches()){
-                leftCondition = leftTerm;
+           String leftCondition = "";
+            // find the left part of condition, string or attribute
+            if(!symbolMap.containsKey(leftTerm)){
+                leftCondition = "'" + leftTerm + "'";
             }else {
                 String leftTbName = "";
                 int leftIndex = 0;
@@ -324,10 +323,10 @@ public class ConstraintRewrite2 {
                 String leftAttName = ((ArrayList<String>) tableMap.get(leftTbName.replaceAll("'", ""))).get(leftIndex);
                 leftCondition = leftTbNickName + "." + leftAttName;
             }
-            // find the right part of condition, numeric or attribute
+             // find the right part of condition, string or attribute
             String rightCondition = "";
-            if(numericPattern.matcher(rightTerm).matches()){
-                rightCondition = rightTerm;
+            if(!symbolMap.containsKey(rightTerm)){
+                rightCondition ="'" + rightTerm + "'";
             }else {
                 int rightIndex = 0;
                 String rightTbNickName = (symbolMap.get(rightTerm)).get(0); // only need 1 regarding table
